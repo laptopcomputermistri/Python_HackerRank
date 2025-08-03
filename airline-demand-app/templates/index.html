@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Airline Market Demand Insights</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        .container { max-width: 900px; margin: auto; }
+        .filters { margin-bottom: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background: #f2f2f2; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Airline Booking Market Demand Insights</h1>
+    <form method="post" class="filters">
+        <label>Origin:
+            <input type="text" name="origin" placeholder="Origin IATA (e.g. SYD)">
+        </label>
+        <label>Destination:
+            <input type="text" name="destination" placeholder="Destination IATA (e.g. MEL)">
+        </label>
+        <button type="submit">Filter</button>
+    </form>
+    <h2>Popular Routes</h2>
+    <table>
+        <tr><th>Origin</th><th>Destination</th><th>Bookings</th></tr>
+        {% for route in routes %}
+        <tr>
+            <td>{{ route.origin }}</td>
+            <td>{{ route.destination }}</td>
+            <td>{{ route.count }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h2>Demand Trend</h2>
+    <div id="demand_chart"></div>
+    <h2>Average Price Trend (AUD)</h2>
+    <div id="price_chart"></div>
+    <h2>Top Airlines by Number of Flights</h2>
+    <div id="top_airlines_chart"></div>
+    <h2>Weekly Demand Trend</h2>
+    <div id="weekly_chart"></div>
+    <h2>Monthly Demand Trend</h2>
+    <div id="monthly_chart"></div>
+</div>
+<script>
+    Plotly.newPlot('demand_chart', [{
+        x: {{ demand_chart.x | default([]) | tojson }},
+        y: {{ demand_chart.y | default([]) | tojson }},
+        type: 'scatter',
+        fill: 'tozeroy',
+        name: 'Total Demand'
+    }], {margin: { t: 30 }});
+
+    Plotly.newPlot('price_chart', [{
+        x: {{ price_chart.x | default([]) | tojson }},
+        y: {{ price_chart.y | default([]) | tojson }},
+        type: 'scatter',
+        name: 'Avg Price'
+    }], {margin: { t: 30 }});
+
+    Plotly.newPlot('top_airlines_chart', [{
+        x: {{ top_airlines_chart.x | default([]) | tojson }},
+        y: {{ top_airlines_chart.y | default([]) | tojson }},
+        type: 'bar',
+        marker: {color: 'orange'},
+        name: 'Flights'
+    }], {
+        margin: { t: 30 },
+        yaxis: { title: "Number of Flights" },
+        xaxis: { title: "Airline" }
+    });
+
+    Plotly.newPlot('weekly_chart', [{
+        x: {{ weekly_chart.x | default([]) | tojson }},
+        y: {{ weekly_chart.y | default([]) | tojson }},
+        type: 'scatter',
+        fill: 'tozeroy',
+        name: 'Weekly Demand'
+    }], {margin: { t: 30 }});
+
+    Plotly.newPlot('monthly_chart', [{
+        x: {{ monthly_chart.x | default([]) | tojson }},
+        y: {{ monthly_chart.y | default([]) | tojson }},
+        type: 'scatter',
+        fill: 'tozeroy',
+        name: 'Monthly Demand'
+    }], {margin: { t: 30 }});
+</script>
+</body>
+</html>
